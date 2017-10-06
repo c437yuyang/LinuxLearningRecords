@@ -1,0 +1,3 @@
+app:main.c add.c mul.c sub.c
+	gcc main.c add.c mul.c sub.c -o app
+
