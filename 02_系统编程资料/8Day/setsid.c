@@ -15,7 +15,7 @@ int main()
     }
     else if(pid == 0){
         //子进程变成会长
-        setsid();
+        setsid();//启动一个守护进程
         while(1);
     }
 
