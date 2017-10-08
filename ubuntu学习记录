@@ -1,0 +1,146 @@
+1.make all -j4 代表四线程
+2.make clean 后可以重新make
+3.touch XX.xxx 创建一个新文件
+4.g++ -c helloworld.cpp 
+  g++ helloworld.o -o helloworld
+  ./helloworld
+  或者
+  g++ -o a1 a1.cpp
+  ./a1
+
+
+5.创建一个工程的步骤:
+ (1):新建工程目录demo1
+ (2):在demo1目录下写xx.cpp
+ (3):在demo1目录下写CMakeLists.txt,内容示范如下 (第一行项目名，第三行可执行文件名)
+     	project(demo1)  
+	find_package(OpenCV REQUIRED)  
+	add_executable(testOPenCV xx.cpp)  
+	target_link_libraries(testOPenCV ${OpenCV_LIBS})  
+	cmake_minimum_required(VERSION 2.8)
+ (4):	cd demo1
+	mkdir build
+	cmake ..
+	make 
+	./testOPenCV
+ 对代码修改后只需重新make再执行就可以了
+
+ 若需要加入c++11特性,则在project(demo1)下面加入
+	SET(CMAKE_C_COMPILER g++)
+	add_compile_options(-std=c++11)
+
+6.所有以/开头的目录都是绝对路径
+  所有相对路径可以直接不要/或者以./开头 （表示当前目录）
+
+7.查看环境变量 echo $PATH
+cat
+nl,cat并显示行号
+od,用二进制查看
+which 查看可执行文件路径
+file 查看指定文件类型
+exit 退出终端
+whereis,locate 查找
+删除非空目录 rm -r
+ls -l *.cpp 列出指定文件，可用通配符
+dpkg -L xxxx 查看软件安装位置
+
+
+ls -l  第二列是硬链接数，子目录越多通常硬链接数越大
+chmod +rw #增加可读写权限
+chmod -rw #去掉可读写权限
+sudo chgrp -R dev python学习/  #改变指定目录的用户组
+which ls /bin/ls   # 查看文件所在位置
+su yxp1 #切换用户
+su -  #切换到root
+
+sudo useradd -m -g groupname username # 添加用户 -m创建家目录 -g指定用户组
+sudo userdel -r #删除用户 -r删除家目录
+
+chown chgrp chmod #修改文件所有者、组、权限，chown不需要-R即可递归修改目录，后两个需要加-R递归修改目录
+
+date #查看系统时间
+cal #查看日历 -y 可以查看一年的日历
+
+df -h #磁盘剩余空间
+du -h #磁盘使用情况
+
+ps aux  #process status 显示进程  a所有用户 u显示详细信息 x	显示没有控制终端的进程，常用:ps au
+ps ajx # 可以查看进程的父进程(ppid,pgid(组id),sid(会话id)),
+
+top #显示当前系统进程  按照cpu内存使用排序	
+
+kill pid #发信号给某个进程
+kiil -l #查看系统有哪些信号，9号信号就是sigkill 就是杀死，所以kill -9 就是杀死某个进程
+kill -9 pid #杀死指定pid的进程 -9表示强制杀死
+
+find dir -name "*1.txt"  #搜索指定目录指定文件  默认是会递归搜索子目录的
+这里面*1表示1之前必须要有个字符
+find . -type f #查找指定类型，f是文件,d是目录
+find . -size +10M #+大于10M，可以k -10M就是小于 10k就是等于
+-mindepth -maxdepth
+
+ln -s 被链接的文件 快捷方式名称 #建立软链接、尽量用绝对路径，移动了后才能工作
+-s代表软链接  否则硬链接
+
+# 打包文件
+tar -cvf 打包文件.tar 被打包的文件／路径...  #并没有压缩文件,只是打包，压缩需要加z
+tar -cvf a1.tar a1/ #打包目录
+tar -cvf a1.tar 121.txt 122.txt  #多个文件用文件名分开，可以用通配符
+# 解包文件
+tar -xvf 打包文件.tar  # 必须进到压缩包所在目录
+
+
+# gzip压缩文件
+tar -zcvf 打包文件.tar.gz 被压缩的文件／路径...
+# 解压缩文件
+tar -zxvf 打包文件.tar.gz
+# 解压缩到指定路径
+tar -zxvf 打包文件.tar.gz -C 目标路径
+
+# bzip2压缩
+tar -jcvf 打包文件.tar.bz2 被压缩的文件／路径...
+
+# 解压缩文件
+tar -jxvf 打包文件.tar.bz2
+
+#gcc编译C语言程序
+gcc hello.c  -I./myHeads -D DEBUG -o hello  #-I添加包含目录，-D添加宏 -o指定输出文件
+
+#g++编译cpp程序
+g++ -std=c++11 helloworld.cpp -o helloworld.bin
+
+-Wall 显示warning信息
+-On 优化代码，n可以取123，代表优化级别
+
+#静态库的使用
+1.gcc a.c b.c -c #得到a.o ,b.o
+2.ar rcs libTest.a a.o b.o #得到静态库.a文件
+
+# 编译使用静态库的程序
+gcc main.c -I ./include/ -L ./lib/ -l Calc -o calc.bin  #假设包含的头文件在./include 目录，包含的静态库文件在 ./lib 名字叫做libCalc.a
+
+# 动态库的使用
+gcc *.c -c -fpic -I ../include/
+gcc -shared *.o -o libCalcDll.so
+
+
+ldd 可执行文件名  #查看可执行程序需要用到哪些动态库
+对于可执行程序，首先搜索程序自身elf文件的DT_RPATH段，但是这个段不好修改
+然后搜索环境变量 LD_LIBRARY_PATH 以及 /etc/ld.so.cache 文件列表
+然后搜索/lib/ 和 /usr/lib
+
+export LD_LIBRARY_PATH=./lib:$LD_LIBRARY_PATH  #临时设置环境变量，使能够找到so文件,中间是冒号	
+
+file 文件名  #查看文件信息(elf)
+
+env  #查看系统环境变量
+
+安装搜狗输入法:
+1.下载后安装
+2.安装完成后im-config 选择fcitx
+3.之后fcitx-config-gtk3，选择添加选择搜狗拼音
+4.右上角调用搜狗拼音
+
+time ./a.out # 可以查看程序运行消耗的时间，real代表总共，user代表代码操作部分，sys代表系统消耗的
+
+
