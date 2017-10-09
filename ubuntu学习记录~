@@ -159,3 +159,16 @@ ls的输出颜色不止3种，有以下几种，
 灰色：表示其他文件
 
 
+//g++编译使用了多线程的程序的时候报错:
+terminate called after throwing an instance of 'std::system_error'
+  what():  Enable multithreading to use std::thread: Operation not permitted
+Aborted (core dumped)
+
+解决:
+编译的时候加上选项 -pthread
+
+sudo apt-get install aptitude #这个软件类似于apt-get ,但是可以用show查看已经安装的软件的信息
+sudo aptitude show xinetd
+
+sudo service xinetd restart   # 重启服务，停止:stop，开启:start
+
