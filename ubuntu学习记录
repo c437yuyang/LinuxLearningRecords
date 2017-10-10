@@ -172,3 +172,6 @@ sudo aptitude show xinetd
 
 sudo service xinetd restart   # 重启服务，停止:stop，开启:start
 
+unicode 汉字  #查看对应unicode编码
+man ascii #查看ascii码表
+

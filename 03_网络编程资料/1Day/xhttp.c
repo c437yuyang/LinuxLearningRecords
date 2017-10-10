@@ -14,12 +14,12 @@ void send_err(错误号, 错误名称, 错误描述)
 {
     //先加上http的协议头
     
-    <html> 
-    <head><title>错误号 错误名称</title> </head>
-    <body>
-    错误描述
-    </body>
-    </html>
+    //<html> 
+    //<head><title>错误号 错误名称</title> </head>
+    //<body>
+    //错误描述
+    //</body>
+    //</html>
 }
 
 
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     if (fp == NULL) 
         //send_err();
 
-    //send_headers();
+    send_headers();
 
     while ((ich = getc(fp)) != EOF)
         putchar(ich);

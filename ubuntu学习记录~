@@ -13,7 +13,7 @@
  (1):新建工程目录demo1
  (2):在demo1目录下写xx.cpp
  (3):在demo1目录下写CMakeLists.txt,内容示范如下 (第一行项目名，第三行可执行文件名)
-     	project(demo1)  
+    project(demo1)  
 	find_package(OpenCV REQUIRED)  
 	add_executable(testOPenCV xx.cpp)  
 	target_link_libraries(testOPenCV ${OpenCV_LIBS})  
@@ -171,4 +171,6 @@ sudo apt-get install aptitude #这个软件类似于apt-get ,但是可以用show
 sudo aptitude show xinetd
 
 sudo service xinetd restart   # 重启服务，停止:stop，开启:start
+
+unicode 汉字  #查看对应unicode编码
 
