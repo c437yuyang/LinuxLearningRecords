@@ -175,3 +175,10 @@ sudo service xinetd restart   # 重启服务，停止:stop，开启:start
 unicode 汉字  #查看对应unicode编码
 man ascii #查看ascii码表
 
+
+ctags ./*.c -R  #在当前目录生成tags文件
+ctrl + ] #跳转到函数定义
+ctrl + T #跳回起始位置
+ctrl + o #显示当前工程目录结构
+F4 查看模块内的函数列表
+[d # vi自带的查看宏定义
