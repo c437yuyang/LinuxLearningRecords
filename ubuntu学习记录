@@ -182,3 +182,12 @@ ctrl + T #跳回起始位置
 ctrl + o #显示当前工程目录结构
 F4 查看模块内的函数列表
 [d # vi自带的查看宏定义
+
+grep -r "socket(" ./  # 在当前目录搜索所有带socket(字符串的文件
+
+ps aux | grep bash | awk {'print $2'}  # awk 表示按列提取，这里是提取后打印第二列
+
+usermod -l  new_name  old_name
+
+
+
