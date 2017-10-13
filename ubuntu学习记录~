@@ -187,4 +187,13 @@ grep -r "socket(" ./  # 在当前目录搜索所有带socket(字符串的文件
 
 ps aux | grep bash | awk {'print $2'}  # awk 表示按列提取，这里是提取后打印第二列
 
+usermod -l  new_name  old_name  # 修改用户登录名 ,-l 代表login,-m代表修改家目录
 
+
+iotop,powertop,nettop  # 分别查看io,power,net的进程排序，需要先安装以及sudo
+
+
+echo "128212.a.a" | sudo tee -a ./a.txt  # tee是把一个输出从标准输出拷贝到文件(追加)，需要sudo
+
+pidof # 查看进程对应pid
+kill -9 $(pidof ./a.out)  #配合kill杀死指定进程
