@@ -54,7 +54,7 @@ int main(int argc, const char* argv[])
     }
     else if(i == 2)
     {
-        execlp("ps", "ps", "aux", NULL);
+        execlp("ps", "ps", "aux", NULL);//excelp执行环境变量能搜索到的程序
     }
 
     printf("over......\n");

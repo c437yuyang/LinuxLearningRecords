@@ -26,6 +26,7 @@ int main(int argc, const char* argv[])
     {
         char* p = "近期，微软向Linux开发人员伸出了橄榄枝，希望Linux开发人员能够转移到Windows 10平台上进行开发。";
         write(fd, p, strlen(p)+1);
+        sleep(2);//加个这个父进程比子进程后退出，显示不会出错
     }
     else if(pid == 0)
     {

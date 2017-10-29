@@ -17,7 +17,7 @@ int main(void)
 
 	// 复制文件描述符
 //	int fd2 = dup(fd);
-    int fd2 = fcntl(fd, F_DUPFD);
+    int fd2 = fcntl(fd, F_DUPFD);//或者这样也行，也是dup的操作
 	// 写文件
 	char* p = "让编程改变世界。。。。。。";
 	write(fd2, p, strlen(p));

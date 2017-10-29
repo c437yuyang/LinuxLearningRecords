@@ -69,77 +69,15 @@ ps ajx # 可以查看进程的父进程(ppid,pgid(组id),sid(会话id)),
 
 top #显示当前系统进程  按照cpu内存使用排序	
 
-kill pid #发信号给某个进程
-kiil -l #查看系统有哪些信号，9号信号就是sigkill 就是杀死，所以kill -9 就是杀死某个进程
-kill -9 pid #杀死指定pid的进程 -9表示强制杀死
-
-find dir -name "*1.txt"  #搜索指定目录指定文件  默认是会递归搜索子目录的
-这里面*1表示1之前必须要有个字符
-find . -type f #查找指定类型，f是文件,d是目录
-find . -size +10M #+大于10M，可以k -10M就是小于 10k就是等于
--mindepth -maxdepth
-
 ln -s 被链接的文件 快捷方式名称 #建立软链接、尽量用绝对路径，移动了后才能工作
 -s代表软链接  否则硬链接
-
-# 打包文件
-tar -cvf 打包文件.tar 被打包的文件／路径...  #并没有压缩文件,只是打包，压缩需要加z
-tar -cvf a1.tar a1/ #打包目录
-tar -cvf a1.tar 121.txt 122.txt  #多个文件用文件名分开，可以用通配符
-# 解包文件
-tar -xvf 打包文件.tar  # 必须进到压缩包所在目录
-
-
-# gzip压缩文件
-tar -zcvf 打包文件.tar.gz 被压缩的文件／路径...
-# 解压缩文件
-tar -zxvf 打包文件.tar.gz
-# 解压缩到指定路径
-tar -zxvf 打包文件.tar.gz -C 目标路径
-
-# bzip2压缩
-tar -jcvf 打包文件.tar.bz2 被压缩的文件／路径...
-
-# 解压缩文件
-tar -jxvf 打包文件.tar.bz2
-
-#gcc编译C语言程序
-gcc hello.c  -I./myHeads -D DEBUG -o hello  #-I添加包含目录，-D添加宏 -o指定输出文件
-
-#g++编译cpp程序
-g++ -std=c++11 helloworld.cpp -o helloworld.bin
-
--Wall 显示warning信息
--On 优化代码，n可以取123，代表优化级别
-
-#静态库的使用
-1.gcc a.c b.c -c #得到a.o ,b.o
-2.ar rcs libTest.a a.o b.o #得到静态库.a文件
-
-# 编译使用静态库的程序
-gcc main.c -I ./include/ -L ./lib/ -l Calc -o calc.bin  #假设包含的头文件在./include 目录，包含的静态库文件在 ./lib 名字叫做libCalc.a
-
-# 动态库的使用
-gcc *.c -c -fpic -I ../include/
-gcc -shared *.o -o libCalcDll.so
-
-
-ldd 可执行文件名  #查看可执行程序需要用到哪些动态库
-对于可执行程序，首先搜索程序自身elf文件的DT_RPATH段，但是这个段不好修改
-然后搜索环境变量 LD_LIBRARY_PATH 以及 /etc/ld.so.cache 文件列表
-然后搜索/lib/ 和 /usr/lib
-
-export LD_LIBRARY_PATH=./lib:$LD_LIBRARY_PATH  #临时设置环境变量，使能够找到so文件,中间是冒号	
-
-file 文件名  #查看文件信息(elf)
-
-env  #查看系统环境变量
 
 安装搜狗输入法:
 1.下载后安装
 2.安装完成后im-config 选择fcitx
 3.之后fcitx-config-gtk3，选择添加选择搜狗拼音
 4.右上角调用搜狗拼音
+
 
 time ./a.out # 可以查看程序运行消耗的时间，real代表总共，user代表代码操作部分，sys代表系统消耗的
 
@@ -197,3 +135,9 @@ echo "128212.a.a" | sudo tee -a ./a.txt  # tee是把一个输出从标准输出�
 
 pidof # 查看进程对应pid
 kill -9 $(pidof ./a.out)  #配合kill杀死指定进程
+
+ dialog --title "oh hey" --inputbox "how do you do ?" 8 55  # 显示一个对话框
+
+
+touch 创建的文件默认是0664权限
+vim 创建的文件也是664

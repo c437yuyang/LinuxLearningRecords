@@ -17,7 +17,7 @@ int main(int argc, const char* argv[])
         printf("parent process, pid = %d, ppid = %d\n", getpid(), getppid());
         // 回收资源
         int status;
-        pid_t wpid = wait(&status);
+        pid_t wpid = wait(&status);//wait是阻塞函数
         printf("child died pid = %d\n", wpid);
         // 通过返回值退出
         if(WIFEXITED(status))
@@ -25,7 +25,7 @@ int main(int argc, const char* argv[])
             printf("child process exit value: %d\n", WEXITSTATUS(status));
         }
         // 子进程被信号杀死
-        else if(WIFSIGNALED(status))
+        else if(WIFSIGNALED(status))//这时候如果用信号kill -9 发送信号去杀死，会打印下面的话
         {
             printf("child process died by signal: %d\n", WTERMSIG(status));
         }
@@ -35,7 +35,7 @@ int main(int argc, const char* argv[])
     else if(pid == 0)
     {
         printf("child process, pid = %d, ppid = %d\n", getpid(), getppid());
-        sleep(200);
+        sleep(10);
     }
 
     for(int i=0; i<5; ++i)

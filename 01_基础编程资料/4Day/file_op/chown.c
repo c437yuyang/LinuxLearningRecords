@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     }
 
     // user->ftp  group->ftp
-    int ret = chown(argv[1], 1002, 1001);
+    int ret = chown(argv[1], 1002, 1001);//1001和1002分别是owner和group
     if(ret == -1)
     {
         perror("chown");

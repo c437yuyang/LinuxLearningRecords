@@ -6,7 +6,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #define SERV_PORT 8000
-
+//没写epoll的代码,就是普通的socket模型
 int main()
 {
 

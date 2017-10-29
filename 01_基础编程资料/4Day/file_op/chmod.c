@@ -11,8 +11,8 @@ int main(int argc, char* argv[])
         printf("a.out filename mode\n");
         exit(1);
     }
-    int mode = strtol(argv[2], NULL, 8);
-    int ret = chmod(argv[1], mode);
+    int mode = strtol(argv[2], NULL, 8);//转换成8进制的数
+    int ret = chmod(argv[1], mode);//设置模式
     if(ret == -1)
     {
         perror("chmod");

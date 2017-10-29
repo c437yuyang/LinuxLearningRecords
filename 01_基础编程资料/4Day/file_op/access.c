@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
-    int ret = access(argv[1], W_OK);
+    int ret = access(argv[1], W_OK);//设置为写,F_OK的话就是检查文件是否存在
     if(ret == -1)
     {
         perror("access");

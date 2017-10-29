@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
     }
     
     struct stat buf_st;
-    int ret = lstat(argv[1], &buf_st);
+    int ret = lstat(argv[1], &buf_st);// stat读取链接本身的属性，lstat读取连接到的文件的属性
     if(ret == -1)
     {
         perror("stat");
