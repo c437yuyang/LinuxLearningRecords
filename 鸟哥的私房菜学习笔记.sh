@@ -74,4 +74,87 @@ restore -t -f 备份文件 # 回复dump备份的文件
 
 
 
+#第11章
+type ll # 查看ll这个命令是外部命令还是内置bash命令，如:ll is aliased to `ls -alF'
+# -a 查看所有的路径，包括alias
+# \回车键，可以让过长的命令换行
+echo $variable 
+echo $PATH #环境变量通常用大写表示
+echo ${PATH}
+# 双引号内的$是具有功能性的$
+# 引用变量通常:${PATH}或者"$PATH",这样能够防止有空格导致失败
+# ''单引号内的$就是一般字符
+# \仍然是转义字符
+# 引用其他命令的结果:`命令` 或者 $(命令)
+# 如:
+PATH="$PATH":/home/yxp # 设置环境变量,双引号内的$PATH就是代表实际的PATH变量
+unset 变量名称 # 取消变量
 
+#一些常用的环境变量:
+$HOME
+$SHELL
+$PATH # 可执行文件的查找路径
+$LANG # 系统的语系数据
+$RANDOM # 取随机数，返回0-32767
+
+env # 查看环境变量
+set # 查看所有变量(环境变量和自定义变量)
+export # 直接export不跟变量 会列出所有的环境变量
+
+
+read 变量名 # 等待输入，类似于cin和scanf
+read -p "please enter your name:" -t 30 name # 等待输入30秒，如果没有输入，则变量被置为空
+declare -i sum=100+30*2 # declare -x 生命为环境变量(export),-i 整形，-r readonly,-a arrau
+declare +x sum # +号表示取消设置变量
+declare -p sum # 列出变量类型
+
+# 数组的使用
+var[1]='aaa'
+var[2]='bbb'
+var[3]='ccc'
+
+ulimit # 查看系统及程序的限制关系
+
+
+#shell 部分:
+# 变量中的删除
+${variable#/*cal/bin} # 删除符合#号后跟的字符串中最短的匹配字符,从前面开始寻找
+${variable##/*cal/bin} # 删除符合##号后跟的字符串中最长的匹配字符
+${variable%/*cal/bin} # 删除符合%号后跟的字符串中最短的匹配字符，从后面开始寻找进行替换，%%类似
+
+#比如:去掉路径得到文件名:
+${variable##/*/} #如果本来是/home/yxp/temp.txt 得到temp.txt
+#得到路径:
+${variable%/*} #得到/home/yxp
+
+# 变量中的替换:
+${variable/old/new} # 将变量中的第一个old替换成new
+${variable//old/new} # 将变量中的所有old替换成new
+
+#变量的测试与内容替换
+var1=${var-root} # 如果var未设置则把var1设置为root
+var1=${var:-root} #如果var未设置或者为空都把var1设置为root
+
+alias  # 后面什么都不跟，查看当前有哪些别名
+alias lm='ls -l | more' #设置别名
+unalias lm # 取消别名
+
+history n # 查看n条历史记录
+history -w # 将当前history记忆内容写入histfiles中
+!number # 执行之前执行过的第几条命令
+
+
+# 命令执行的路径与命令查找顺序:
+# 1.绝对路径 2.alias 3.bash内置的builtin命令 4.%{PATH}
+
+# 因为通常的配置文件都是login_shell在登录的时候读取的配置文件，所以自己改了配置文件后，需要注销再登录，但是用source命令也可以实现
+source 配置文件名 # 读取配置文件
+. 配置文件名 # 同上
+
+# non-login shell只会读取~/.bashrc
+
+
+stty -a #查看终端支持的所有的按键
+set -u # 设置后若使用未设置的变量会报错
+set -x # 执行命令前会有+符号
+echo $- # 查看当前bash的设置，默认是himBH

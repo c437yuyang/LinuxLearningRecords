@@ -1,5 +1,6 @@
 1.make all -j4 代表四线程
 2.make clean 后可以重新make
+make -n clean # -n表示不真正执行，假装执行,看看输出
 3.touch XX.xxx 创建一个新文件
 4.g++ -c helloworld.cpp 
   g++ helloworld.o -o helloworld
@@ -144,3 +145,7 @@ vim 创建的文件也是664
 
 ctrl+j #等于回车
 ctrl+h #等于backspace
+ctrl+s #暂停当前屏幕输出
+ctrl+q #回复屏幕输出
+vim 忽略大小写搜索:   /xxx/c 忽略大小写  /xxx/C  不忽略大小写
+less 忽略大小写搜索: env | less -i
