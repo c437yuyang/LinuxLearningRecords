@@ -10,8 +10,9 @@ rm -i  # 删除的时候提示
 cp -i  # 若文件存在，覆盖之前提示
 cp -r  # 递归复制目录
 
-head 10 # 显示文件头10行
-tail 10 # 类似
+head -n 10 file # 显示文件头10行
+tail -n 10 file # 类似
+head file  # 默认10行
 
 chmod u +rw a.txt  # u表示user,g表示group,o表示other,a表示all,默认是a
                     # +rw是增加权限,还有-和=，后面跟数字的方法也可以

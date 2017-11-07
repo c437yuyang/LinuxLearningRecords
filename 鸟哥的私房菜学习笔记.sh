@@ -175,3 +175,42 @@ echo ${PATH} | cut -d ":" -f 3,5 # 第三个和第五个一起取，但是会添
 echo ${PATH} | cut -c 12-20 # 显示第12到20列的字符，1-  表示1后面的所有,1 表示只显示第1行
 cut -d ' ' -f 1 # 如果想按照空格进行拆分，指定了一个就必须是一个空格
 
+#cut 是从每一行里面选取符合信息的部分，grep是找到符合条件的行
+last | grep -v 'root'  #找到不带root的
+
+
+#排序命令:
+cat /etc/passwd | sort #按照字典序排序, -r 是逆序
+cat /etc/passwd | sort -t ":" -k 3 # 找到按照:分割的第三列，按照这个第三列进行排序
+
+last | cut -d ' ' -f1 |sort | uniq -ic  #uniq把相同的只显示一次，-i忽略大小写，-c显示计数
+wc /etc/manpath.config # 查看所选文件的行数，字数，字符数 -l仅显示行数
+
+
+#双重重定向:
+last | tee -a last.list | less # 把输出结果追加到last.list以及显示到less中,默认是覆盖
+
+
+#字符转换命令:
+last | tr '[a-z]' '[A-Z]' #将输出里面所有小写转换成大写
+cat /etc/passwd | tr -d ":" #将所有:删除掉
+
+col -x #将tab转换成空格键
+col -b #没怎么看懂
+
+paste a.txt b.txt # 把两个文件每一行 -d 后面可以选择分隔符，默认是tab
+
+expand -t 6 file # 把file里面的tab用6个空格替换
+
+split  -b 300k /etc/termcap termcap # 把一个文件进行分割，分割后以300k为大小块，默认用termcapaa xxxab... 命名
+cat termcap* >> termcapback # 恢复
+
+ll / | split -l 10 - lsrott # 把输出按照每10行一个文件进行分割，这里第二个-其实就是代表标准输出，因为现在ll的输出没有在文件里面，就用-来代替了
+
+# 参数替换
+
+cat fileA |xargs head # 用cat读入fileA里面的内容，假设是fileB.txt ,传递给第二个head命令 用作参数
+# xargs 可以跟多个参数，用空格进行分割
+find /sbin -perm +7000 | xargsr ls -l #
+
+
