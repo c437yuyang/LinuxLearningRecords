@@ -147,5 +147,7 @@ ctrl+j #等于回车
 ctrl+h #等于backspace
 ctrl+s #暂停当前屏幕输出
 ctrl+q #回复屏幕输出
+ctrl+d #输入exit
+ctrl+m #输入回车
 vim 忽略大小写搜索:   /xxx/c 忽略大小写  /xxx/C  不忽略大小写
 less 忽略大小写搜索: env | less -i
