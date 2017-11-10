@@ -175,42 +175,176 @@ echo ${PATH} | cut -d ":" -f 3,5 # 第三个和第五个一起取，但是会添
 echo ${PATH} | cut -c 12-20 # 显示第12到20列的字符，1-  表示1后面的所有,1 表示只显示第1行
 cut -d ' ' -f 1 # 如果想按照空格进行拆分，指定了一个就必须是一个空格
 
-#cut 是从每一行里面选取符合信息的部分，grep是找到符合条件的行
-last | grep -v 'root'  #找到不带root的
+
+#第12章
+
+# grep命令使用部分 ，和基本的正则表达式差不多，下面有一些例子
+# 这些例子都是针对行的(因为本身grep就是一个针对行的)
+grep -n 'xxx' filename # -n显示行号
+grep -vn 'the' regular_express.txt #-v 显示没有的行
+grep -n 't[ae]st' regular_express.txt 
+grep -n '[^g]oo' regular_express.txt
+grep -n '[^[:lower:]]' regular_express.txt # 匹配非小写字母的
+grep -n '[^[:digit:]]' regular_express.txt # 非数字的
+grep -n '^the' regular_express.txt # 以the开始的
+grep -n '\.$' regular_express.txt # 找以.结尾的
+grep -n '^$' regular_express.txt # 找到空白行
+grep -n 'ooo*' regular_express.txt # .本身的额含义还是任意一个字符，*的含义还是0次或任意次
+grep -n 'o\{2,6\}' regular_express.txt  # o出现两次到6次
 
 
-#排序命令:
-cat /etc/passwd | sort #按照字典序排序, -r 是逆序
-cat /etc/passwd | sort -t ":" -k 3 # 找到按照:分割的第三列，按照这个第三列进行排序
+# sed命令的使用
+nl /etc/passwd | sed '2,5d' # 删除2-5行
+nl /etc/passwd | sed '2d' # 删除2行
+nl /etc/passwd | sed '2,$d' # 删除2-最后一行
+nl /etc/passwd | sed '2a hello' #第二行后面加上'hello',2-5行就把2换成2,5
+nl /etc/passwd | sed '2,5a hello\
+    world' #增加多行的数据就用\来进行换行
+nl /etc/passwd | sed -n '5,7p' # 显示5到7行  或者head -n 7 | tail -n 5
 
-last | cut -d ' ' -f1 |sort | uniq -ic  #uniq把相同的只显示一次，-i忽略大小写，-c显示计数
-wc /etc/manpath.config # 查看所选文件的行数，字数，字符数 -l仅显示行数
+ifconfig eth0 | grep 'inet addr' # 查看eth0的ip信息
 
+# sed 的替换功能:
+# 整行替换
+nl /etc/passwd | sed '2,5c No 2-5 number' # 将2-5行替换为这个字符串
+# 部分替换(和vim类似)
+sed 's/old/new/g' # 执行替换
+ifconfig eth0 | grep 'inet addr' | sed 's/^.*addr://g' # 查看eth0的ip信息并且去除前缀
+ifconfig eth0 | grep 'inet addr' | sed 's/^.*addr://g' | sed 's/Bcast.*$//g' # 去除前缀后缀
+cat /etc/manpath.config  | grep 'MAN' | sed 's/#.*$//g' # 只查看MAN的数据并且去掉#开始的注释
 
-#双重重定向:
-last | tee -a last.list | less # 把输出结果追加到last.list以及显示到less中,默认是覆盖
-
-
-#字符转换命令:
-last | tr '[a-z]' '[A-Z]' #将输出里面所有小写转换成大写
-cat /etc/passwd | tr -d ":" #将所有:删除掉
-
-col -x #将tab转换成空格键
-col -b #没怎么看懂
-
-paste a.txt b.txt # 把两个文件每一行 -d 后面可以选择分隔符，默认是tab
-
-expand -t 6 file # 把file里面的tab用6个空格替换
-
-split  -b 300k /etc/termcap termcap # 把一个文件进行分割，分割后以300k为大小块，默认用termcapaa xxxab... 命名
-cat termcap* >> termcapback # 恢复
-
-ll / | split -l 10 - lsrott # 把输出按照每10行一个文件进行分割，这里第二个-其实就是代表标准输出，因为现在ll的输出没有在文件里面，就用-来代替了
-
-# 参数替换
-
-cat fileA |xargs head # 用cat读入fileA里面的内容，假设是fileB.txt ,传递给第二个head命令 用作参数
-# xargs 可以跟多个参数，用空格进行分割
-find /sbin -perm +7000 | xargsr ls -l #
+# sed 直接写入文件
+sed -i '$a this is test' regular_express.txt # 直接在最后一行后面写入，-i 就是直接写入而不是输出到屏幕的意思
+sed -i 's/\.$/\!/g' regular_express.txt  # 把所有带.结尾的换成! 直接写入文件
 
 
+# 扩展正则表达式
+# 包含 +,?,|,(),()+
+egrep -vn '^$|^#' regular_express.txt # 找到不是#和空白行的
+
+# awk
+awk '条件类型1 {动作1} 条件类型2 {动作2}'
+# 先读入一行，设置$0等变量，判断条件是否执行动作，执行动作，重复其余行，类似于for其实
+# sed 处理一行数据,awk将一行分成数个字段来处理
+last -n 5 | awk '{print $1 "\t" $3}' # 提取输出的第一列和第三列，$0代表整行
+# awk的内置变量: NF 每一行拥有的总字符数 NR 目前awk处理的是第几行的数据 FS目前的分隔字符，默认是空格
+last -n 5 | awk '{print $0 "\t lines:" NR "\t columns: " NF}' # 在打印的时候同时显示当前行的位置及字符数
+
+cat /etc/passwd | awk '{FS=":"} $3 < 10 {print $1 "\t " $3}' # 将分隔符设置为:,找到第三列小于10的数据并且显示
+cat /etc/passwd | awk 'BEGIN {FS=":"} $3 < 10 {print $1 "\t " $3}' # 因为是先判断条件才执行动作，所以第一行有问题，这里加上BEGIN让第一行也能正常处理
+
+
+
+# 第13章
+echo -e "hello world \n" # -e 设置后可以解析\n等转义字符
+
+# 时间部分
+date1=$(date +%Y%m%d) # 20171011这种格式
+echo "$(date +%Y-%m-%d)" # 2017-10-11
+date1=$(date --date='2 days ago' +%Y%m%d) # 两天后的日期
+
+
+# 简单的算数运算
+echo $(( 13%3 )) # 注意空格
+
+
+# test的使用
+
+# 判断字符串部分
+test -z $var # 判断是否为空，空返回true
+test -n $var # 。。。。。非空
+# 还有== 和 !=
+test str1==str2
+
+# 判断文件相关:
+# -e 存在 -f 存在且为文件 -d 存在且为目录
+# -r 具有读权限 -r ... -x ...
+# -nt file1 比 file2 新 
+# -ot ....旧
+# -ef 判断是不是同一个文件(指向同一个inode,所以硬链接和软连接都会判断成是同一个)
+
+# 整数的判定
+# -eq,-ne,-gt,-lt,-ge,-le
+
+# 多条件
+test -f a.txt -o -d dir # -o表示or,-a表示and.!表示取反
+
+# test可以用中括号加空格替换
+[ -z "$HOME" ] #等价于 test -z "$HOME"
+
+
+
+# shell中参数
+# $0代表程序名，$1第一个参数.依次类推
+# $#参数个数，#@:全部参数
+# shift n # 将参数左移，移出去的就丢掉
+
+
+# 条件判断式
+if [ 条件判断式  ];then
+
+fi
+
+#多个条件
+if [ 条件判断式1 ] && [ 条件判断式2  ];then
+
+else
+
+fi
+
+if [ 条件判断式1 ] && [ 条件判断式2  ];then
+
+elif [ 条件判断是 ];then 
+else
+
+fi
+
+
+
+# netstat 查看目前主机打开的网络端口服务
+netstat -tuln # 查看在运行的服务
+
+# case 语句
+
+case $变量 in
+    "第一个变量内容" )
+        程序段
+        ;;
+    "第二个变量内容")
+        ;;
+    "第三个变量内容")
+        ;;
+    *)
+        exit 1
+        ;;
+esac
+
+# 函数的使用
+# 参见sh12.sh
+
+# 循环的使用
+while [ condition ]
+do
+    程序段落
+done
+
+until [ condition ] # do while
+do 
+
+done
+
+# for
+for var in con1 con2 con3...
+do
+
+done
+
+for (( i=0;i<=100;i=i+1 ))
+do
+
+    done
+
+# shell 脚本的调试
+sh -n # 不执行，仅仅检查语法
+sh -v # 在执行之前，先把scripts的内容输出到屏幕上
+sh -x # 在执行的时候打印每一步的指令

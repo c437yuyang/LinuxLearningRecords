@@ -136,3 +136,5 @@ export LD_LIBRARY_PATH=./lib:$LD_LIBRARY_PATH  #临时设置环境变量，使�
 			#	□ 执行一个命令：
 			#		® sudo ldconfig -v
             # 或者使用dlopen,dlclose,dlsym等函数进行动态加载，类似于windows那边的loadLibrary();
+
+
