@@ -428,6 +428,45 @@ who # 都可以
 
 
 # 第16章 例行性工作
-# at now +2 minutes
-# xxxxx
-# ctrl+d  # 设置两分钟后执行xxx
+at now +2 minutes
+xxxxx
+xxxxx  # 可以直接执行多个命令
+ctrl+d  # 设置两分钟后执行xxx
+
+atq # 查看当前有哪些工作调度
+atrm n # 删除第n个工作调度
+
+batch 23:00 2017-11-13 # 在指定时间
+sync
+sync
+shutdown -r now 
+ctrl+d 
+# batch和at的用法一样，但是会选择在CPU负载低于0.8的时候才执行
+
+#crontab的使用
+# crontab是循环执行，at是一次执行
+# /etc/cron.allow和deny 记录允许和不允许执行的用户
+# /etc/crontab # 记录系统所有的
+# 这个命令其实就是编辑/etc/crontab 文件，然后系统每分钟会读取一次这个文件
+
+crontab -e # 启动vim编辑
+* * * * * sh xxx.sh # 每分钟执行一次指定脚本文件
+
+
+# 第18章 系统服务
+# daemon和service的关系: daemon是用来启动service的程序
+# 服务有:stand_alone 一直在后台运行，响应速度块
+# super daemon 需要使用的时候才唤醒，响应速度慢
+
+/etc/services # 查看系统服务对应的端口
+/etc/init.d/× # 这个目录里面存放的是几乎所有的服务的启动脚本
+/etc/sysconfig/* #各项服务的初始化环境配置文件
+
+# 所有stand alone服务的操作方式
+service [service name] (start|stop|restart...)# 对服务进行操作
+service --status-all # 查看当前所有服务运行状态
+
+# 所有super daemon服务的操作方式
+# 其实所有super daemon都由xinetd进行管理，而xinetd其实就是一个stand_alone服务
+
+
