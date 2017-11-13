@@ -348,3 +348,86 @@ do
 sh -n # 不执行，仅仅检查语法
 sh -v # 在执行之前，先把scripts的内容输出到屏幕上
 sh -x # 在执行的时候打印每一步的指令
+
+# 第14章
+
+# /etc/passwd 文件结构
+# 里面每一行数据共有7列
+# 每一列分别是:账号名，密码，UID，GID，用户信息说名列，主文件夹，Shell
+
+# /etc/shadow 文件结构
+# 记录了用户密码相关内容
+
+# /etc/group 文件结构
+# 记录了GID与组名的对应
+# 4列分别是:1.用户组名称2.用户组密码3.GID4.此用户组支持的账号名称
+
+groups # 查看当前用户支持的用户组
+newgrp users # 切换到新的用户组，但是必须是当前用户已经支持的用户组(在/etc/group中对应位置加上)
+
+
+#/etc/gshadow # 记录了用户组密码相关的内容
+# 4列分别是 用户组名 密码列 用户组管理员账号，该用户组的所属账号(就是boss?)
+
+
+# 14.2账号管理
+useradd username # 默认创建，会创建主文件夹并且权限为700,ubuntu不会创建,不指定用户组的话会默认创建一个相同名称的用户组
+useradd -m -g groupname -u uid # -m创建家目录，-g指定组名 -u 指定uid,-r 创建为系统账号(UID默认从100后开始算，普通用户从500后开始算(ubuntu里面是1000？)),-G指定组名，-g指定gid
+sudo grep testuser1 /etc/passwd /etc/shadow /etc/group # 查看创建用户后做出的修改
+useradd -D # 查看添加用户时执行的默认操作
+
+# useradd后账号默认是不能使用的，需要设置新密码才能使用
+passwd testuser1  # 设置新密码
+passwd #设置当前登录用户的密码
+
+# 设置完成后可以通过usermod来进行修改
+usermod -e "2009-12-31" testuser1 # 使账号失效在指定时间
+usermod -c 账号说明 username
+usermod -u uid username
+usermod -l 新用户名 username
+usermod -L 暂时冻结用户 username
+
+userdel -r username # -r连同主文件夹一起删除，主要是删除掉/etc/passwd /etc/shadow /etc/group /etc/gshadow
+
+
+# 上面的命令都是需要root权限的，finger和id也可以查看相关信息
+finger [-s] username  # -s 仅列出。。。  
+id username 
+
+
+# 用户组相关管理操作
+groupmod groupname
+groupdel 
+groupadd
+gpasswd
+
+
+# 查看用户相关信息
+w
+who # 都可以
+
+
+
+# 第15章
+# 磁盘阵列RAID:(RedundantArrays of Inexpensive Disks RAID)
+# RAID0:两块以上磁盘，每次写入的时候，把数据等分写到每块磁盘上，这样读写性能全部会得到提升。
+# 但缺点是数据损坏后，无法找回。
+# RAID1:两块以上磁盘，一块磁盘当做备份盘，每次写入往两块磁盘写相同的数据，这样性能降低(容量相当于只有一般)
+# 但是数据安全性非常好，任何一块坏了都可以从备份盘获取到相同的数据。
+# RAID0+1 ：先组成RAID0 ，在组成RAID1
+# RAID1+0：类似
+# 这两种虽然同时具有0和1的优点，但是性能和磁盘容量还是只有一半
+# RAID5: 多块磁盘(三块以上)
+# 每次写入的时候，按照RAID0的方式写入，但是有一块盘用来写备份数据、每次写入是不同的盘来写备份数据
+# 这样，只损失一块磁盘的容量，但是仍然能够在有一块磁盘损坏的情况下，恢复数据。
+# RAID6:两块磁盘用作备份，允许出现两块磁盘损坏。
+
+
+# 总的来说，RAID就是在性能与数据保全两方面上做权衡
+
+
+
+# 第16章 例行性工作
+# at now +2 minutes
+# xxxxx
+# ctrl+d  # 设置两分钟后执行xxx
