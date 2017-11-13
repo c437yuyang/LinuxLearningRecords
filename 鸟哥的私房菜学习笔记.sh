@@ -167,7 +167,8 @@ ll ~/Desktop/linuxlearningrecords/ >>list_right_and_error 2>&1 # 将两个输出
 # 命令执行的依据部分
 # && 和 || 就和C语言里面一样
 # 手动判断命令执行正确? 用$?==0 来判断，等于0表示正确，否则错误
-
+# $$代表 当前进程的ID号
+# $?代表 当前进程执行后成功还是失败
 
 # 选取命令:
 echo ${PATH} | cut -d ":" -f 3 # 选取输出里面按照":"分割的第3个，-f是必须的
@@ -453,14 +454,47 @@ crontab -e # 启动vim编辑
 * * * * * sh xxx.sh # 每分钟执行一次指定脚本文件
 
 
+# 第17章  程序管理
+top [-d 数字] # 刷新的秒数
+top [-n] # 与-d配合，输出的次数
+top -b -n 2 #输出两次
+top -p # 指定某个PID检测
+
+pstree  # 查看进程树
+
+#系统资源的查看
+free # 查看内存使用情况 -m 用MB的方式显示，默认字节
+
+uname # 查看系统与内核相关的信息 -a 所有信息
+
+uptime # 查看系统启动时间与工作负载
+
+netstat # 跟踪网络 -a 列出所有连接、监听、Socket数据 -t 列出tcp网络数据包的数据 -u 列出udp..
+# 输出分为两部分，第一部分是网络的连接，第二部分是系统进程的连接(进程也可以收到各种进程发来的消息)
+# -n 只看网络部分，不看进程部分
+# -l 列出正在进行网络监听的服务
+netstat -tnlp # 查看那些进程有网络访问
+
+kill -9 PID # 杀死指定PID进程  man SIGNAL 查看系统的信号集
+
+
+dmesg # 分析系统内核产生的信息:开机的时候一闪而过的硬件检测信息
+dmesg |grep -i hd # 查看开机
+
 # 第18章 系统服务
 # daemon和service的关系: daemon是用来启动service的程序
 # 服务有:stand_alone 一直在后台运行，响应速度块
 # super daemon 需要使用的时候才唤醒，响应速度慢
+# stand alone的通常用来做单一服务的窗口
+# super daemon 通常用来做多功能的窗口，需要干什么就干什么
+# daemon的命名规则: 都以d结尾
+    
 
 /etc/services # 查看系统服务对应的端口
 /etc/init.d/× # 这个目录里面存放的是几乎所有的服务的启动脚本
 /etc/sysconfig/* #各项服务的初始化环境配置文件
+/etc/xinetd.conf # super daemon 的配置文件
+/etc/xinetd.d/* # 同上
 
 # 所有stand alone服务的操作方式
 service [service name] (start|stop|restart...)# 对服务进行操作
@@ -468,5 +502,5 @@ service --status-all # 查看当前所有服务运行状态
 
 # 所有super daemon服务的操作方式
 # 其实所有super daemon都由xinetd进行管理，而xinetd其实就是一个stand_alone服务
-
+grep -i 'disable' /etc/xinetd.d/* #查看当前有哪些服务，=yes就是没有启动
 
