@@ -466,20 +466,28 @@ pstree  # 查看进程树
 free # 查看内存使用情况 -m 用MB的方式显示，默认字节
 
 uname # 查看系统与内核相关的信息 -a 所有信息
-
+uname -r # 查看内核版本
 uptime # 查看系统启动时间与工作负载
 
 netstat # 跟踪网络 -a 列出所有连接、监听、Socket数据 -t 列出tcp网络数据包的数据 -u 列出udp..
 # 输出分为两部分，第一部分是网络的连接，第二部分是系统进程的连接(进程也可以收到各种进程发来的消息)
 # -n 只看网络部分，不看进程部分
 # -l 列出正在进行网络监听的服务
+# -p 列出 pid和所属程序名称
 netstat -tnlp # 查看那些进程有网络访问
 
 kill -9 PID # 杀死指定PID进程  man SIGNAL 查看系统的信号集
 
-
 dmesg # 分析系统内核产生的信息:开机的时候一闪而过的硬件检测信息
 dmesg |grep -i hd # 查看开机
+
+vmstat 1 3 # 统计目前主机CPU状态，每秒一次，一共三次
+
+fuser -uv . #查看当前面目录在被那些进程使用,文件也可以，但是自己试了不行
+fuser -ki ./ShellRecords.sh # 试图删除这个文件，看有没有人再用
+lsof # 列出当前系统被打开的所有文件名和设备
+lsof -u root -a -U # -u 指定用户,-U 指定类型为socket类型，-a 表示and，连接两个条件
+lsof -u root | grep bash # 查看root打开的所有bash相关的文件
 
 # 第18章 系统服务
 # daemon和service的关系: daemon是用来启动service的程序
@@ -504,3 +512,19 @@ service --status-all # 查看当前所有服务运行状态
 # 其实所有super daemon都由xinetd进行管理，而xinetd其实就是一个stand_alone服务
 grep -i 'disable' /etc/xinetd.d/* #查看当前有哪些服务，=yes就是没有启动
 
+
+
+# 第19章:
+# linux系统通过run level来规定系统使用不同的服务来启动，让linux的使用环境不同
+# run level 3 : 完整含有网络功能的纯文本模式
+# run level 5 : 和3类似，但是使用x window 加载
+# 0 4 6 分别是关机，系统保留，重启
+
+
+# 第22章:
+ldconfig #这个指令其实是将/etc/ld.so.conf 里面的内容读入高速缓存，因为动态库的话在硬盘，使用起来会很慢，同时也记录在/etc/ld.so.cache 
+ldd 可执行文件名 # 查看用到的动态库
+
+
+# 第26章
+/lib/modules/$(uname -r)/kernel # 查看内核提供的模块
