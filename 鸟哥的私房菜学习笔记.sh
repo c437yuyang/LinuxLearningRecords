@@ -16,16 +16,55 @@ shutdown -h 20:25
 shutdown -h  +10 # 10分钟后
 shutdown -c # 取消之前设置的shutdown命令
 shutdown -k now "System will be shutdown now" # 发出警告信件
+shutdown -t 5 # 5秒后关机
+sync # 把数据同步到磁盘
 
+# 因为执行等级也有关机，重启这两个，因此用:
+init 0 # 也可以关机,6就是重启了
 
 # 第六章:
+chgrp groupname filename # 更改指定文件名为指定用户组，用户组必须出现在/etc/group 中，否则报错
+chown [-R] username filename # 更改为指定用户，用户必须出现在/etc/passwd中，-R 递归修改其子目录
+chown [-R] username:groupname filename #同时修改所有者和用户组
+
+cp src dst # cp命令会连着执行者的属性和权限一起复制
+chmod [-R] username filename
+chmod u=rwx,go=rx filename # 用法有:u g o a,+,-
+# 目录有r权限才能ls 目录
+# 目录的w权限对应涉及到修改目录里面的文件名，子目录名等相关操作
 # 目录的执行权限是代表用户能够进入该目录并使该目录成为工作目录
+
+# FHS:FileSystem Hierarchy Standard
+# 最重要的几个目录:
+/ # root根目录
+/usr # UNIX software resource，软件安装执行有关，类似于windows的c:\windows 和c:\programfiles 的结合体
+/var # variable
+/etc # 配置文件目录
+/dev # 所需要的设备文件
+/usr/local  # 管理员自己下载安装的软件，通常建议安装到这个目录
+# 几个bin目录的区分:
+/bin # 存放在单用户维护模式下还能被操作的命令，cat,chmod,ls等最常用的
+/sbin # 存放开机过程需要用到的 fdisk ifconfig init等
+/usr/bin # 用户可以使用的命令，比如自己装的python,chrome
+/usr/sbin # 某些网络服务器的软件的服务命令(daemon)
+
 
 
 # 第7章:
+# 文件目录操作相关命令:
+pwd [-P] # print working directory ,-P 不使用链接
+mkdir -p dirname # 递归创建目录
+mkdir -m 711 test2 # 不适用umask，直接指定权限创建目录
+# 涉及到修改原有文件名或目录名的时候，-i 都是询问的意思，-f 是强制执行，-u 是较新才会执行
 basename /home/yxp/test.txt # 获取文件名或者最后一层的目录名
 dirname /home/yxp/test.tex # 获取目录名,取到的目录都是带前不带后
 
+
+#查看文件内容相关命令
+tac # 从最后一行开始显示，就是cat倒着来
+nl # cat -n 
+tail [-n number] filename 
+head -n -100 filename # 后面跟的一个负数，表示打印除了最后100行的所有
 od -t c /home/yxp/.bashrc # 用指定方式显示文件内容，-t 后接文件类型描述符
 c 是用ascii字符显示,x是用16进制显示
 
@@ -33,6 +72,7 @@ touch 可以修改文件时间，-a 修改访问时间,-m 修改 mtime
 
 创建文件本身默认是666的权限，目录是777，
 但是因为有umask(022),所以创建文件默认是644,目录默认是755
+umask 022 # 指定umask为022
 
 chattr # 修改文件隐藏属性
 sudo chattr +i temp.txt # temp.txt这个文件不能被删除，改名，设置链接
@@ -46,6 +86,10 @@ which [-a] command # 查找执行文件,-a将查询到的所有的列出，默�
 # 通常不用find，太慢，用whereis  locate,是通过查询数据库
 whereis ifconfig  # -b只查找二进制文件，-s 之查找source文件
 locate passwd # -i 忽略大小写,-r 可以跟正则表达式,后面的文件名只需要是部分名称即可。
+locate "passwd" | grep ".*/passwd$" # 查找文件名为passwd的文件,单双引号都可以
+
+find [PATH] [option] [action]
+find / -name passwd # 只有locate是可以部分匹配的，其他几个搜索都是全字匹配
 
 #第8章
 # 文件名实际上是记录在所在目录的block里面的，因此新增、重命名、删除操作需要目录的w权限
