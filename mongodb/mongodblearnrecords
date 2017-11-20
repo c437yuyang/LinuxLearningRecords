@@ -1,0 +1,6 @@
+# 默认配置在/etc/mongodb.conf
+# 需要开启远程连接的话，需要将配置中的bind_ip设置为0.0.0.0
+# 启动等命令:
+# sudo service mongodb stop
+# sudo service mongodb start
+# sudo service mongodb restart

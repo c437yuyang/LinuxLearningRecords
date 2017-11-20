@@ -96,6 +96,8 @@ find / -name passwd # 只有locate是可以部分匹配的，其他几个搜索�
 ll -i #查看文件对应inode号码
 sync #将内存中的属性为Dirty的数据同步到磁盘，正常关机时也会调用sync命令
 
+ls -l /lib/modules/$(uname -r)/kernel/fs # 查看当前系统支持的文件系统格式
+cat /proc/filesystems # 查看当前已经加载到内存的文件系统
 
 df # 列出指定目录文件系统的整体磁盘使用量 -m 用MB的方式显示,-h用较为人性化的方式显示
 du # 评估当前目录文件系统的磁盘使用量，参数类似df，常用 du -sh # 查看指定目录大小，-a 还列出文件的大小
@@ -110,6 +112,14 @@ ln -s #创建软连接，就和windows里面的快捷方式一模一样，但是
 df / # 可以查看到设备名称
 fdisk /dev/sda # 对这个硬件设备使用fdisk,不能是/dev/sda1
 
+dd if=/dev/zero of=/home/yxp/test_big_file bs=1M count=512 # 创建一个空白大文件
+# if 是输入设备 /dev/zero 是一个一直输出0的设备 of是输出文件 bs是block_size,count是输出的bs个数
+
+dumpe2fs /dev/sda #查看硬盘的相关信息(blocksize等等)
+
+ll -s # 查看的时候第一列显示占用block的数目(4为一个)，8的话就占用了两个
+sudo du -sb /etc # 查看实际占用的大小
+sudo du -sm /etc # 查看本来应该占用的大小
 
 #第九章
 dump -S . #查看备份当前目录所需要的大小
