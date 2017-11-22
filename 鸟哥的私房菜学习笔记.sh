@@ -122,13 +122,59 @@ sudo du -sb /etc # 查看实际占用的大小
 sudo du -sm /etc # 查看本来应该占用的大小
 
 #第九章
+#-c　新建打包文件，－v显示过程中的文件名,-f后面跟文件名
+#-x 解压文件　配合-C 解压在特定路径
+#-j 通过bzip2的方式进行压缩解压缩，文件名最好是.tar.bz2
+#-z 通过gzip的方式进行。。。　.tar.gz
+#--exclude 忽略指定文件名
+# 打包文件
+tar -cvf 打包文件.tar 被打包的文件或路径...  #并没有压缩文件,只是打包，压缩需要加z
+tar -cvf a1.tar a1/ #打包目录
+tar -cvf a1.tar 121.txt 122.txt  #多个文件用文件名分开，可以用通配符
+# 解包文件
+tar -xvf 打包文件.tar  # 必须进到压缩包所在目录
+# gzip压缩文件
+tar -zcvf 打包文件.tar.gz 被压缩的文件或路径...
+# 解压缩文件
+tar -zxvf 打包文件.tar.gz
+# 解压缩到指定路径
+tar -zxvf 打包文件.tar.gz -C 目标路径
+# bzip2压缩
+tar -jcvf 打包文件.tar.bz2 被压缩的文件或路径...
+# 解压缩文件
+tar -jxvf 打包文件.tar.bz2
+
+
+#备份部分
+# 目录备份只支持level0,不支持-u参数(将此次备份记录到/etc/dumpates文件中)
+# -f 接filename,-j 加入bzip2进行压缩
 dump -S . #查看备份当前目录所需要的大小
 dump -0u -f /home/yxp/backupdir # 将当前目录备份到指定目录，级别用0
 restore -t -f 备份文件 # 回复dump备份的文件
+dump -W # 查看是否存在备份
 
+#dd 用于备份
+dd if=/etc/passwd of=~/back_up/passwd.bak # 备份指定文件，默认512bytes 一个bs,其实这样使用就是cp命令了
+dd if=/dev/hdc of=~/back_up/mbr.bak # 备份自己的第一个扇区
+# 还原的时候交换if和of即可。
 
+# 第10章:VIM
+# hjkl 左下上右，配合n使用可以个方向的移动指定步数
+# nG 移动到第n行
+# H M L 分别是移动到当前页的首、中、尾
+# n[SPACE] 移动到第n列
+# ctrl+d 向下移动半屏 ctrl+u向上移动半屏
+# ctrl+f 查看当前文件目录,可能是配置了vimplus的原因，默认的应该是向下翻一页
+# ctrl+b 向前翻一页
+
+# :n1,n2s/word1/word2/g # 在n1到n2之间寻找word1并且替换成word2
+# :1,$s/word1/word2/g # 在第一行到最后一行。。。
+# :1,$s/word1/word2/gc # 替换前询问
 
 #第11章
+
+/etc/shells # 查看系统可用的合法的shell
+/etc/passwd # 最后一列记录了用户登录时获得的shell
 type ll # 查看ll这个命令是外部命令还是内置bash命令，如:ll is aliased to `ls -alF'
 # -a 查看所有的路径，包括alias
 # \回车键，可以让过长的命令换行
@@ -155,20 +201,32 @@ env # 查看环境变量
 set # 查看所有变量(环境变量和自定义变量)
 export # 直接export不跟变量 会列出所有的环境变量
 
+echo $$  # 查看目前这个shell使用的POD
+echo $? # 查看上一个命令的回传码
+
+# 子进程只会继承父进程的环境变量，子进程不会继承父进程的自定义变量
+# 因此如果想要子进程继承自己定义的变量，则需要使用export
+
+locale # 查看系统语系相关的变量
+locale -a # 查看系统支持的语系
 
 read 变量名 # 等待输入，类似于cin和scanf
 read -p "please enter your name:" -t 30 name # 等待输入30秒，如果没有输入，则变量被置为空
 declare -i sum=100+30*2 # declare -x 生命为环境变量(export),-i 整形，-r readonly,-a arrau
 declare +x sum # +号表示取消设置变量
 declare -p sum # 列出变量类型
-
+delcare -r sum # 声明为readonly的变量，如果对其进行赋值会报错
+# typeset 和 declare 是一模一样的功能
 # 数组的使用
 var[1]='aaa'
 var[2]='bbb'
 var[3]='ccc'
+echo "${var[1]},${var[2]},${var[3]}"
 
 ulimit # 查看系统及程序的限制关系
-
+ulimit -f # 查看当前系统文件size限制
+ulimit -f 10240 # 限制用户仅能建立10MB以下的容量的文件
+# 这时再来创建大文件就会报错
 
 #shell 部分:
 # 变量中的删除
@@ -190,25 +248,46 @@ var1=${var-root} # 如果var未设置则把var1设置为root
 var1=${var:-root} #如果var未设置或者为空都把var1设置为root
 
 alias  # 后面什么都不跟，查看当前有哪些别名
-alias lm='ls -l | more' #设置别名
+alias lm='ls -l | more' #设置别名,注意有两个'',""也是可以的，其实就是只要是字符串即可
 unalias lm # 取消别名
 
 history n # 查看n条历史记录
 history -w # 将当前history记忆内容写入histfiles中
 !number # 执行之前执行过的第几条命令
-
+!! # 执行上一条指令
+!al # 执行上一条以al开头的指令
 
 # 命令执行的路径与命令查找顺序:
 # 1.绝对路径 2.alias 3.bash内置的builtin命令 4.%{PATH}
+# 所以当执行ls的时候，是优先执行的alias ls='ls --color=auto',如果去直接执行/bin/ls的话就没有颜色信息了出来
 
-# 因为通常的配置文件都是login_shell在登录的时候读取的配置文件，所以自己改了配置文件后，需要注销再登录，但是用source命令也可以实现
+
+# 因为通常的配置文件都是login_shell在登录的时候读取的配置文件，所以自己改了配置文件后，需要注销再登录
+# 但是用source命令也可以实现
 source 配置文件名 # 读取配置文件
 . 配置文件名 # 同上
 
+# login shell 会读取两个配置文件:
+# /etc/profile # 系统整体的配置，最好不要修改
+# ~/.bashrc 或者 ~/.bash_login 或者 ~/.profile:属于用户的个人设置，你要修改自己的数据，就写入这里
 # non-login shell只会读取~/.bashrc
 
+# 默认系统可用的终端有tty 1-7 
+# tty7 是图形界面
 
 stty -a #查看终端支持的所有的按键
+
+ctrl+j #等于回车
+ctrl+h #等于backspace
+ctrl+s #暂停当前屏幕输出
+ctrl+q #回复屏幕输出
+ctrl+d #输入exit eof
+ctrl+m #输入回车
+ctrl+? #清除输入
+
+# bash支持的通配符
+*0个或任意多个任意字符、? 一定有一个任意字符、[]、[0-9]、[^] #非
+
 set -u # 设置后若使用未设置的变量会报错
 set -x # 执行命令前会有+符号
 echo $- # 查看当前bash的设置，默认是himBH
@@ -224,12 +303,65 @@ ll ~/Desktop/linuxlearningrecords/ >>list_right_and_error 2>&1 # 将两个输出
 # $$代表 当前进程的ID号
 # $?代表 当前进程执行后成功还是失败
 
-# 选取命令:
+# 选取命令（对一段数据进行分析，取出我们想要的）:
 echo ${PATH} | cut -d ":" -f 3 # 选取输出里面按照":"分割的第3个，-f是必须的
 echo ${PATH} | cut -d ":" -f 3,5 # 第三个和第五个一起取，但是会添加:分隔符
 echo ${PATH} | cut -c 12-20 # 显示第12到20列的字符，1-  表示1后面的所有,1 表示只显示第1行
 cut -d ' ' -f 1 # 如果想按照空格进行拆分，指定了一个就必须是一个空格
+export | cut -c 12- # 取出第12列到最后(从1开始数)的数据
 
+# cut是针对每一行信息做提取，取出自己想要的，grep是针对所有行中找出符合条件的行
+last | grep 'root' | cut -d ' ' -f1 # 找到含有root的行并且只取第一列
+
+# sort , -f 忽略大小写,-b忽略开始的空格，-r反向排序,-t指定分割符，-k指定排序区间
+cat /etc/passwd | sort # 将输出的行按照字典序进行排序
+cat /etc/passwd | sort -t ':' -k 3 # 将输出按照:进行分割，按分割后的第三列进行排序
+last | cut -d ' ' -f1 | sort # 取输出的第一列并且排序
+
+#uniq 去除重复 -i 忽略大小写，-c 显示计数
+last | cut -d ' ' -f1 | sort | uniq -c # 取输出第一列排序然后去除重复,并且显示计数
+last | cut -d ' ' -f1 |sort | uniq -c | sort  -r  # 统计登录次数最多的用户
+
+#wc 统计文本的信息
+cat /etc/passwd | wc # 输出行数、字数、字符数, -l w m 分别对应只显示三个中的一个
+
+#tee 会同时将数据送到文件和屏幕
+tee [-a] file # -a 以累加方式
+last | tee last.list # 同时到文件和屏幕
+ls -l /home | tee ~/homefile | less # 同时到文件和less
+
+# 字符转换命令
+# tr 删除一段信息中的文字或是进行文字信息的转换
+last | tr '[a-z]' 'A-Z' # 进行大小写转换
+cat /etc/passwd | tr -d ':' # 删除信息中的:
+
+#col 用于替换字符串
+col [-xb] # -x 将tab转换成对等的空格键
+
+#join 用于将两个文件中有相同数据的那一行加在一起
+join -t ':' /etc/passwd /etc/shadow #以:作为分隔符，对比第一个字段的数据，然后进行合并
+
+#paste 简单的将两个文件的两行合并在一起，用tab分开
+paste /etc/passwd /etc/shadow #-d 指定分隔符，默认是tab
+cat /etc/group|paste /etc/passwd /etc/shadow -|head -n 3 # - 指定从标准输出读取数据，这里就是把cat的输出作为输入，最后三个文件粘贴在了一起，取出前三行
+
+#expand用于将tab转换成空格键
+expand [-t] file # -t 6 就是把tab替换成6个空格
+
+#split 切割大文件
+split -b 300k filename prefix # 将文件切割成300k为单位的小文件，用prefix作为前缀
+# 合并:
+cat prefix* >> filename # 就用cat就可以
+
+split -l # 用行数进行分割
+ls -al / | split -l 10 - prefix # 将结果以每10行进行分割，这里的第三个- 代表stdin
+wc -l prefix* # 查看每个文件的行数
+
+#xargs 参数代换
+cut -d ':' -f1 /etc/passwd | head -n 3 | xargs finger # 取出文件的第一列的前三行(就是三个用户名)，作为finger的输入
+# -p 执行每个指令之前都会询问用户
+# -n 每次执行的时候，跟几个参数，-n 5的话，finger命令就一次查询5个人
+# -e 后跟字符串，每次分析到指定字符串的时候就认为是EOF结束。
 
 #第12章
 

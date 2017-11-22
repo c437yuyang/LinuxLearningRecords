@@ -138,3 +138,6 @@ export LD_LIBRARY_PATH=./lib:$LD_LIBRARY_PATH  #临时设置环境变量，使�
             # 或者使用dlopen,dlclose,dlsym等函数进行动态加载，类似于windows那边的loadLibrary();
 
 
+
+find . -name "*.c" -maxdepth 1 | xargs rm # 删除当前目录下的*.c文件
+

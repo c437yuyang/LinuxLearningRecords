@@ -143,11 +143,13 @@ kill -9 $(pidof ./a.out)  #配合kill杀死指定进程
 touch 创建的文件默认是0664权限
 vim 创建的文件也是664
 
+# 用stty -a 查看系统当前支持的快捷键
 ctrl+j #等于回车
 ctrl+h #等于backspace
 ctrl+s #暂停当前屏幕输出
 ctrl+q #回复屏幕输出
 ctrl+d #输入exit eof
 ctrl+m #输入回车
+ctrl+? #清除输入
 vim 忽略大小写搜索:   /xxx/c 忽略大小写  /xxx/C  不忽略大小写
 less 忽略大小写搜索: env | less -i
