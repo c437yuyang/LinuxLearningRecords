@@ -201,7 +201,7 @@ env # 查看环境变量
 set # 查看所有变量(环境变量和自定义变量)
 export # 直接export不跟变量 会列出所有的环境变量
 
-echo $$  # 查看目前这个shell使用的POD
+echo $$  # 查看目前这个shell使用的PID
 echo $? # 查看上一个命令的回传码
 
 # 子进程只会继承父进程的环境变量，子进程不会继承父进程的自定义变量
@@ -212,7 +212,7 @@ locale -a # 查看系统支持的语系
 
 read 变量名 # 等待输入，类似于cin和scanf
 read -p "please enter your name:" -t 30 name # 等待输入30秒，如果没有输入，则变量被置为空
-declare -i sum=100+30*2 # declare -x 生命为环境变量(export),-i 整形，-r readonly,-a arrau
+declare -i sum=100+30*2 # declare -x 生命为环境变量(export),-i 整形，-r readonly,-a array
 declare +x sum # +号表示取消设置变量
 declare -p sum # 列出变量类型
 delcare -r sum # 声明为readonly的变量，如果对其进行赋值会报错
@@ -364,7 +364,7 @@ cut -d ':' -f1 /etc/passwd | head -n 3 | xargs finger # 取出文件的第一列
 # -e 后跟字符串，每次分析到指定字符串的时候就认为是EOF结束。
 
 #第12章
-
+grep [-A数字] [-B数字] '搜索字符串' filename # -A后面跟数字表示当前行后面的多少行也列出来，-B是之前多少行
 # grep命令使用部分 ，和基本的正则表达式差不多，下面有一些例子
 # 这些例子都是针对行的(因为本身grep就是一个针对行的)
 grep -n 'xxx' filename # -n显示行号
@@ -376,11 +376,11 @@ grep -n '[^[:digit:]]' regular_express.txt # 非数字的
 grep -n '^the' regular_express.txt # 以the开始的
 grep -n '\.$' regular_express.txt # 找以.结尾的
 grep -n '^$' regular_express.txt # 找到空白行
-grep -n 'ooo*' regular_express.txt # .本身的额含义还是任意一个字符，*的含义还是0次或任意次
+grep -n 'ooo*' regular_express.txt # .本身的含义还是任意一个字符，*的含义还是0次或任意次
 grep -n 'o\{2,6\}' regular_express.txt  # o出现两次到6次
+grep -n 'g..d' regular_express.txt # .表示任意字符
 
-
-# sed命令的使用
+# sed命令的使用(sed 是管道命令，可以将数据进行替换、删除、新增、选取特定行等功能)
 nl /etc/passwd | sed '2,5d' # 删除2-5行
 nl /etc/passwd | sed '2d' # 删除2行
 nl /etc/passwd | sed '2,$d' # 删除2-最后一行
@@ -404,12 +404,14 @@ cat /etc/manpath.config  | grep 'MAN' | sed 's/#.*$//g' # 只查看MAN的数据�
 sed -i '$a this is test' regular_express.txt # 直接在最后一行后面写入，-i 就是直接写入而不是输出到屏幕的意思
 sed -i 's/\.$/\!/g' regular_express.txt  # 把所有带.结尾的换成! 直接写入文件
 
+# sed 选取特定行
+nl /etc/passwd | sed -n '5,7p' #仅查看5到7行
 
 # 扩展正则表达式
 # 包含 +,?,|,(),()+
 egrep -vn '^$|^#' regular_express.txt # 找到不是#和空白行的
 
-# awk
+# awk (sed是将数据一整行一起处理，awk是将一行分为数个字段进行处理)
 awk '条件类型1 {动作1} 条件类型2 {动作2}'
 # 先读入一行，设置$0等变量，判断条件是否执行动作，执行动作，重复其余行，类似于for其实
 # sed 处理一行数据,awk将一行分成数个字段来处理
