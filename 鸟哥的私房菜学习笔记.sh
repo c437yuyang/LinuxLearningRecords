@@ -458,16 +458,15 @@ test str1==str2
 # 多条件
 test -f a.txt -o -d dir # -o表示or,-a表示and.!表示取反
 
-# test可以用中括号加空格替换
+# test可以用中括号加空格替换(注意空格不能少)
 [ -z "$HOME" ] #等价于 test -z "$HOME"
-
-
 
 # shell中参数
 # $0代表程序名，$1第一个参数.依次类推
 # $#参数个数，#@:全部参数
 # shift n # 将参数左移，移出去的就丢掉
-
+# $? 代表上次指令执行的结果是否错误
+# bash里面判断相等用一个和两个等号是一样的，但是建议还是用两个，保持程序书写习惯
 
 # 条件判断式
 if [ 条件判断式  ];then
@@ -523,7 +522,7 @@ do
 done
 
 # for
-for var in con1 con2 con3...
+for var in con1 con2 con3... # 写在for后面的注释，一定要先有一个空格，不然会出问题
 do
 
 done
@@ -531,15 +530,20 @@ done
 for (( i=0;i<=100;i=i+1 ))
 do
 
-    done
+done
 
 # shell 脚本的调试
 sh -n # 不执行，仅仅检查语法
 sh -v # 在执行之前，先把scripts的内容输出到屏幕上
 sh -x # 在执行的时候打印每一步的指令
 
-# 第14章
 
+# shell 脚本需要执行的话，至少需要r权限，比如用sh sh17.sh
+# 需要直接执行的话，比如./sh17.sh 就需要有x权限
+
+# 第14章
+man 5 passwd # man查看passwd，很清晰的写的，比如每一列的内容
+man 5 shadow # man查看密码相关
 # /etc/passwd 文件结构
 # 里面每一行数据共有7列
 # 每一列分别是:账号名，密码，UID，GID，用户信息说名列，主文件夹，Shell
@@ -563,7 +567,7 @@ newgrp users # 切换到新的用户组，但是必须是当前用户已经支�
 useradd username # 默认创建，会创建主文件夹并且权限为700,ubuntu不会创建,不指定用户组的话会默认创建一个相同名称的用户组
 useradd -m -g groupname -u uid # -m创建家目录，-g指定组名 -u 指定uid,-r 创建为系统账号(UID默认从100后开始算，普通用户从500后开始算(ubuntu里面是1000？)),-G指定组名，-g指定gid
 sudo grep testuser1 /etc/passwd /etc/shadow /etc/group # 查看创建用户后做出的修改
-useradd -D # 查看添加用户时执行的默认操作
+useradd -D # 查看添加用户时系统会执行的默认操作有哪些
 
 # useradd后账号默认是不能使用的，需要设置新密码才能使用
 passwd testuser1  # 设置新密码
@@ -601,9 +605,9 @@ who # 都可以
 # 磁盘阵列RAID:(RedundantArrays of Inexpensive Disks RAID)
 # RAID0:两块以上磁盘，每次写入的时候，把数据等分写到每块磁盘上，这样读写性能全部会得到提升。
 # 但缺点是数据损坏后，无法找回。
-# RAID1:两块以上磁盘，一块磁盘当做备份盘，每次写入往两块磁盘写相同的数据，这样性能降低(容量相当于只有一般)
+# RAID1:两块以上磁盘，一块磁盘当做备份盘，每次写入往两块磁盘写相同的数据，这样性能降低(容量相当于只有一半)
 # 但是数据安全性非常好，任何一块坏了都可以从备份盘获取到相同的数据。
-# RAID0+1 ：先组成RAID0 ，在组成RAID1
+# RAID0+1 ：先组成RAID0，在组成RAID1
 # RAID1+0：类似
 # 这两种虽然同时具有0和1的优点，但是性能和磁盘容量还是只有一半
 # RAID5: 多块磁盘(三块以上)
@@ -611,10 +615,7 @@ who # 都可以
 # 这样，只损失一块磁盘的容量，但是仍然能够在有一块磁盘损坏的情况下，恢复数据。
 # RAID6:两块磁盘用作备份，允许出现两块磁盘损坏。
 
-
 # 总的来说，RAID就是在性能与数据保全两方面上做权衡
-
-
 
 # 第16章 例行性工作
 at now +2 minutes
@@ -639,7 +640,7 @@ ctrl+d
 # 这个命令其实就是编辑/etc/crontab 文件，然后系统每分钟会读取一次这个文件
 
 crontab -e # 启动vim编辑
-* * * * * sh xxx.sh # 每分钟执行一次指定脚本文件
+* * * * * sh xxx.sh # 每分钟执行一次指定脚本文件,分别是minute,hour,day,month,week
 
 
 # 第17章  程序管理
@@ -684,7 +685,7 @@ lsof -u root | grep bash # 查看root打开的所有bash相关的文件
 # stand alone的通常用来做单一服务的窗口
 # super daemon 通常用来做多功能的窗口，需要干什么就干什么
 # daemon的命名规则: 都以d结尾
-    
+
 
 /etc/services # 查看系统服务对应的端口
 /etc/init.d/× # 这个目录里面存放的是几乎所有的服务的启动脚本

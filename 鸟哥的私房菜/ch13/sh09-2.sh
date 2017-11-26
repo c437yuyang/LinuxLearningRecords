@@ -1,6 +1,4 @@
 #!/bin/bash
-
-
 case $1 in
     "hello")
         echo "hello,how are you ?"
